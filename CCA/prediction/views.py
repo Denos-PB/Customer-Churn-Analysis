@@ -6,35 +6,33 @@ from joblib import load
 import pandas as pd
 
 def train_model_view(request):
-    if request.metthod == 'POST':
+    if request.method == 'POST':
         try:
             model,results = train_model()
-            
+
             model_path=save_model(model)
-            
+
             context = {
                 'success' : True,
                 'results' : results,
                 'model_path' : model_path
             }
-            
+
             messages.success(request, 'Model trained successfully!')
-            
+
         except Exception as e:
             context = {
                 'success' : False,
                 'error': str(e)
             }
-            
+
             messages.error(request, f'Error training model: {str(e)}')
-            
+
         return render(request, 'prediction/training_results.html', context)
-    
+
     return render(request, 'prediction/train.html')
 
 
-
-model = load('churn_model.joblib')
 
 def predict_view(request):
     if request.method == 'POST':
@@ -44,9 +42,9 @@ def predict_view(request):
             'total_charges': float(request.POST.get('total_charges')),
             'tenure': int(request.POST.get('tenure'))
         }
-        
+
         prediction = make_prediction(data)
-        
+
         PredictionHistory.objects.create(
             contract_type=data['contract'],
             monthly_charges=data['monthly_charges'],
@@ -54,12 +52,12 @@ def predict_view(request):
             tenure=data['tenure'],
             prediction=bool(prediction)
         )
-        
+
         return render(request, 'prediction/result.html', {
             'prediction': prediction,
             **data
         })
-    
+
     return render(request, 'prediction/predict.html')
 
 def history_view(request):
