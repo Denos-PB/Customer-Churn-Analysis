@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2>Prediction History</h2>
+        <a href="{% url 'predict' %}" class="btn btn-primary">New Prediction</a>
+    </div>
+    <div class="card-body">
+        {% if predictions %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Contract Type</th>
+                            <th>Monthly Charges</th>
+                            <th>Total Charges</th>
+                            <th>Tenure</th>
+                            <th>Prediction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pred in predictions %}
+                            <tr>
+                                <td>{{ pred.date_created }}</td>
+                                <td>{{ pred.contract_type }}</td>
+                                <td>${{ pred.monthly_charges }}</td>
+                                <td>${{ pred.total_charges }}</td>
+                                <td>{{ pred.tenure }} months</td>
+                                <td>
+                                    {% if pred.prediction %}
+                                        <span class="badge bg-danger">High Risk</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Low Risk</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No predictions have been made yet. 
+                <a href="{% url 'predict' %}">Make your first prediction</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

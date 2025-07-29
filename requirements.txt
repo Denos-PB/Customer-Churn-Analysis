@@ -1,0 +1,12 @@
+django
+pandas
+numpy
+joblib
+scipy
+threadpoolctl
+scikit-learn
+seaborn
+matplotlib
+plotly
+django-crispy-forms
+gunicorn
